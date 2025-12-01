@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ustam Cepte - Sanayi Rehberi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+        
+        /* HEADER */
+        .search-header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 60px 0 80px 0; color: white; text-align: center;
+        }
+
+        /* KAYAN MENÜ */
+        .category-scroll {
+            overflow-x: auto; white-space: nowrap; gap: 15px;
+            scrollbar-width: none; -ms-overflow-style: none;
+            padding-left: 5px; padding-right: 5px;
+        }
+        .category-scroll::-webkit-scrollbar { display: none; }
+
+        .cat-item {
+            display: flex; flex-direction: column; align-items: center;
+            text-decoration: none; color: #6c757d; min-width: 70px; transition: all 0.3s;
+        }
+        .cat-item .icon-box {
+            width: 55px; height: 55px; background-color: #f8f9fa;
+            border: 1px solid #e9ecef; border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; margin-bottom: 8px; transition: all 0.3s; color: #495057;
+        }
+        .cat-item span { font-size: 0.75rem; font-weight: 600; }
+        
+        .cat-item:hover .icon-box, .cat-item.active .icon-box {
+            background-color: #FFF8E1; border-color: #FFD700; color: #d97706;
+            transform: translateY(-3px); box-shadow: 0 4px 10px rgba(255, 215, 0, 0.2);
+        }
+        .cat-item:hover span, .cat-item.active span { color: #d97706; }
+
+        /* KARTLAR */
+        .card-premium {
+            position: relative; background: #fff;
+            border: 2px solid #FFD700; border-radius: 12px;
+            background: linear-gradient(to bottom, #fffdf5, #ffffff);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.25);
+            transition: transform 0.3s; z-index: 1;
+        }
+        .card-premium:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(255, 215, 0, 0.4); }
+        
+        .premium-badge {
+            position: absolute; top: 10px; right: 10px;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            color: #000; font-weight: 900; padding: 6px 16px;
+            border-radius: 6px; font-size: 11px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 100; text-transform: uppercase; letter-spacing: 1px;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .card-standard {
+            border: 1px solid #e5e7eb; border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card-standard:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+
+        .verified-icon { color: #3b82f6; margin-left: 5px; font-size: 1.1rem; }
+        .category-label { font-size: 0.75rem; letter-spacing: 1px; font-weight: 700; color: #6c757d; }
+        
+        .tag-link {
+            color: white; border: 1px solid rgba(255,255,255,0.4);
+            background-color: rgba(255,255,255,0.1);
+            padding: 5px 15px; border-radius: 50px;
+            text-decoration: none; font-size: 0.9rem; transition: all 0.3s;
+        }
+        .tag-link:hover { background-color: white; color: #0f172a; border-color: white; }
+
+        /* AI TOOL STYLES */
+        .ai-card {
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            color: white; border: none;
+        }
+        .hover-warning:hover { background-color: #f59e0b; color: black !important; border-color: #f59e0b; }
+        
+        /* LİNK DÜZENLEMESİ */
+        .shop-link { text-decoration: none; color: inherit; display: block; height: 100%; }
+        .shop-link:hover { color: inherit; }
+
+        /* PUAN ROZETİ */
+        .rating-badge {
+            background-color: #FFD700; color: #000; font-weight: 800;
+            padding: 2px 8px; border-radius: 6px; font-size: 0.85rem;
+            display: inline-flex; align-items: center; gap: 4px;
+        }
+        .review-count { font-size: 0.8rem; color: #6c757d; font-weight: 600; background: #f1f5f9; padding: 2px 8px; border-radius: 6px; border: 1px solid #e2e8f0; margin-left: 5px; }
+
+        /* AI ANALİZ KUTUSU */
+        .ai-container { background: linear-gradient(135deg, #111827 0%, #374151 100%); border-radius: 20px; color: white; overflow: hidden; position: relative; }
+        .ai-option-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            color: white; text-align: left; padding: 15px; border-radius: 10px;
+            transition: all 0.3s; cursor: pointer; display: flex; align-items: center;
+        }
+        .ai-option-btn:hover { background: rgba(255,215,0,0.2); border-color: #FFD700; transform: translateX(5px); }
+        .progress-bar-animated { animation: progressAnimation 2s ease-in-out forwards; }
+        @keyframes progressAnimation { 0% { width: 0%; } 100% { width: 92%; } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2 border-bottom border-secondary sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-warning d-flex align-items-center" href="{% url 'home' %}">
+                <i class="fa-solid fa-wrench me-2"></i> 
+                <span class="d-inline-block">USTAM CEPTE</span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end mt-2 mt-lg-0" id="mobileMenu">
+                <div class="d-flex flex-column flex-lg-row align-items-center gap-3">
+                    
+                    <a href="{% url 'esnaf_kayit' %}" class="btn btn-sm btn-outline-light rounded-pill px-3 w-100 w-lg-auto">
+                        <i class="fa-solid fa-briefcase me-1"></i> Esnaf Kayıt
+                    </a>
+
+                    <div class="vr text-white d-none d-lg-block"></div>
+                    
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'profil' %}" class="btn btn-sm btn-warning rounded-pill px-3 fw-bold text-dark w-100 w-lg-auto d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-car-side me-2"></i> Garajım
+                        </a>
+                        <a href="{% url 'cikis_yap' %}" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold w-100 w-lg-auto">
+                            Çıkış <i class="fa-solid fa-right-from-bracket ms-1"></i>
+                        </a>
+                    {% else %}
+                        <div class="d-flex gap-2 w-100 w-lg-auto">
+                            <a href="{% url 'giris_yap' %}" class="btn btn-sm btn-outline-light rounded-pill px-3 flex-grow-1">Giriş</a>
+                            <a href="{% url 'kayit_ol' %}" class="btn btn-sm btn-warning rounded-pill px-3 fw-bold text-dark flex-grow-1">Üye Ol</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="search-header">
+        <div class="container" data-aos="fade-down">
+            <h1 class="fw-bold mb-3 display-5"><i class="fa-solid fa-car-on text-warning"></i> Aracınız İçin Ne Lazım?</h1>
+            <p class="lead mb-5 text-white-50">Yapay zeka destekli arama ile en doğru ustayı bulun.</p>
+            <div class="row justify-content-center">
+                <div class="col-md-7">
+                    <form action="" method="GET" id="searchForm">
+                        <div class="input-group input-group-lg shadow-lg bg-white rounded-pill overflow-hidden p-1">
+                            <span class="input-group-text bg-white border-0 ps-3"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                            <input type="text" name="q" id="searchInput" class="form-control border-0 shadow-none" placeholder="Yazın veya konuşun... (Örn: BMW, Klima)" value="{{ arama_terimi|default:'' }}">
+                            <span class="input-group-text bg-white border-0" onclick="startDictation()" style="cursor: pointer;"><i class="fa-solid fa-microphone text-secondary"></i></span>
+                            <button class="btn btn-warning fw-bold rounded-pill px-4 ms-2" type="submit">BUL</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="mt-4 d-flex justify-content-center flex-wrap gap-2 align-items-center">
+                <span class="text-white-50 small text-uppercase ls-1 me-2">Sık Arananlar:</span>
+                <a href="?q=Periyodik" class="tag-link">Periyodik Bakım</a>
+                <a href="?q=Akü" class="tag-link">Akü Değişimi</a>
+                <a href="?q=Yol Yardım" class="tag-link">Yol Yardım</a>
+                <a href="?q=Ekspertiz" class="tag-link">Oto Ekspertiz</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white shadow-sm sticky-top" style="z-index: 1000;">
+        <div class="container">
+            <div class="category-scroll d-flex align-items-center py-2">
+                <a href="?kategori=TUMU" class="cat-item {% if not secilen_kategori or secilen_kategori == 'TUMU' %}active{% endif %}"><div class="icon-box"><i class="fa-solid fa-border-all"></i></div><span>Tümü</span></a>
+                <a href="?kategori=MOTOR" class="cat-item {% if secilen_kategori == 'MOTOR' %}active{% endif %}"><div class="icon-box"><i class="fa-solid fa-gears"></i></div><span>Motor</span></a>
+                <a href="?kategori=BAKIM" class="cat-item {% if secilen_kategori == 'BAKIM' %}active{% endif %}"><div class="icon-box"><i class="fa-solid fa-oil-can"></i></div><span>Bakım</span></a>
+                <a href="?kategori=ELEKTRIK" class="cat-item {% if secilen_kategori == 'ELEKTRIK' %}active{% endif %}"><div class="icon-box"><i class="fa-solid fa-bolt"></i></div><span>Elektrik</span></a>
+                <a href="?kategori=AKU" class="cat-item {% if secilen_kategori == 'AKU' %}active{% endif %}"><div class="icon-box"><i class="fa-solid fa-car-battery"></i></div><span>Akü</span></a>
+                <a href="?kategori=KAPORTA" class="cat-item {% if secilen_kategori == 'KAPORTA' %}active{% endif %}"><div class="icon-box"><i class="fa-solid fa-spray-can-sparkles"></i></div><span>Kaporta</span></a>
+                <a href="?kategori=YEDEK" class="cat-item {% if secilen_kategori == 'YEDEK' %}active{% endif %}"><div class="icon-box"><i class="fa-solid fa-toolbox"></i></div><span>Yedek</span></a>
+                <a href="?kategori=LASTIK" class="cat-item {% if secilen_kategori == 'LASTIK' %}active{% endif %}"><div class="icon-box"><i class="fa-solid fa-circle-radiation"></i></div><span>Lastik</span></a>
+                <a href="?kategori=EKSPERTIZ" class="cat-item {% if secilen_kategori == 'EKSPERTIZ' %}active{% endif %}"><div class="icon-box"><i class="fa-solid fa-clipboard-check"></i></div><span>Ekspertiz</span></a>
+                <a href="?kategori=YOLYARDIM" class="cat-item {% if secilen_kategori == 'YOLYARDIM' %}active{% endif %}"><div class="icon-box"><i class="fa-solid fa-truck-pickup"></i></div><span>Çekici</span></a>
+                <a href="?kategori=EGZOZ" class="cat-item {% if secilen_kategori == 'EGZOZ' %}active{% endif %}"><div class="icon-box"><i class="fa-solid fa-smog"></i></div><span>Egzoz</span></a>
+                 <a href="?kategori=TORNACI" class="cat-item {% if secilen_kategori == 'TORNACI' %}active{% endif %}"><div class="icon-box"><i class="fa-solid fa-screwdriver"></i></div><span>Torna</span></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5" data-aos="fade-up">
+        <div class="card ai-card border-0 shadow-lg overflow-hidden">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-3 p-4 text-center text-md-start">
+                    <h3 class="fw-bold mb-2"><i class="fa-solid fa-microchip text-warning"></i> KM Bakım Robotu</h3>
+                    {% if kullanici_araci %}
+                    <p class="mb-0 small text-warning fw-bold"><i class="fa-solid fa-car"></i> {{ kullanici_araci.marka_model }} Tanımlandı</p>
+                    {% else %}
+                    <p class="mb-0 opacity-75 small">Aracınızın kilometresine göre bakım zamanını hesaplar.</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-9 bg-white p-4">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-3"><label class="form-label small fw-bold text-muted">Güncel KM</label><input type="number" id="aracKm" class="form-control" placeholder="Örn: 120000" value="{{ kullanici_araci.km|default:'' }}"></div>
+                        <div class="col-md-3"><label class="form-label small fw-bold text-muted">Son Bakım KM</label><input type="number" id="sonBakimKm" class="form-control" placeholder="Örn: 115000" value="{{ kullanici_araci.son_bakim_km|default:'' }}"></div>
+                        <div class="col-md-3"><label class="form-label small fw-bold text-muted">Yakıt Tipi</label><select id="yakitTipi" class="form-select"><option value="dizel" {% if kullanici_araci.yakit == 'dizel' %}selected{% endif %}>Dizel</option><option value="benzin" {% if kullanici_araci.yakit == 'benzin' %}selected{% endif %}>Benzin / LPG</option></select></div>
+                        <div class="col-md-3"><button onclick="bakimHesapla()" class="btn btn-warning w-100 fw-bold text-dark">Analiz Et</button></div>
+                    </div>
+                    <div id="bakimSonuc" class="mt-3 p-3 rounded bg-light border border-warning d-none">
+                        <h6 class="fw-bold text-dark mb-2 small"><i class="fa-solid fa-clipboard-check text-success"></i> Analiz Raporu:</h6>
+                        <ul class="small text-muted mb-0 ps-3" id="bakimListesi"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5" data-aos="fade-up">
+        <div class="ai-container shadow-lg p-5">
+            <div class="row align-items-center">
+                <div class="col-md-4 text-center mb-4 mb-md-0">
+                    <i class="fa-solid fa-robot fa-5x text-warning mb-3"></i>
+                    <h3 class="fw-bold">AI Arıza Tespit</h3>
+                    <p class="text-white-50">Sorunu seçin, yapay zeka analiz etsin ve sizi doğru ustaya göndersin.</p>
+                    <button class="btn btn-outline-warning rounded-pill mt-3" onclick="resetAI()">Yeniden Başlat</button>
+                </div>
+                <div class="col-md-8">
+                    <div id="step1">
+                        <h5 class="mb-4 fw-bold border-bottom pb-2 border-secondary">1. Şikayetiniz Nedir?</h5>
+                        <div class="row g-3">
+                            <div class="col-6"><div class="ai-option-btn" onclick="analyze('SES')"><i class="fa-solid fa-volume-high text-warning me-3"></i> Ses Geliyor</div></div>
+                            <div class="col-6"><div class="ai-option-btn" onclick="analyze('TITREME')"><i class="fa-solid fa-wave-square text-info me-3"></i> Titreme</div></div>
+                            <div class="col-6"><div class="ai-option-btn" onclick="analyze('DUMAN')"><i class="fa-solid fa-smog text-secondary me-3"></i> Duman Atıyor</div></div>
+                            <div class="col-6"><div class="ai-option-btn" onclick="analyze('ISIK')"><i class="fa-solid fa-triangle-exclamation text-danger me-3"></i> Arıza Lambası</div></div>
+                        </div>
+                    </div>
+                    <div id="step2" class="d-none text-center py-4">
+                        <h5 class="mb-3">Yapay Zeka Analiz Ediyor...</h5>
+                        <div class="progress mt-3" style="height: 15px; background-color: rgba(255,255,255,0.1);"><div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" style="width: 100%"></div></div>
+                        <p class="text-white-50 small mt-3">Ostim veritabanı taranıyor...</p>
+                    </div>
+                    <div id="step3" class="d-none">
+                        <div class="alert alert-success border-0 bg-opacity-25 bg-success text-white p-4">
+                            <h4 class="alert-heading fw-bold mb-3"><i class="fa-solid fa-circle-check"></i> TESPİT EDİLDİ!</h4>
+                            <p class="mb-0 lead" id="resultText">...</p>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <a href="#" id="resultLink" class="btn btn-warning fw-bold px-5 py-3 shadow rounded-pill">İlgili Ustaları Listele <i class="fa-solid fa-arrow-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5" data-aos="fade-up">
+        <div class="card border-0 shadow-lg" style="background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; overflow: hidden;">
+            <div class="card-body p-4 text-center">
+                <h3 class="fw-bold mb-3"><i class="fa-solid fa-barcode me-2"></i> Arıza Kodunu Biliyor musun?</h3>
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="input-group input-group-lg">
+                            <input type="text" id="obdInput" class="form-control border-0" placeholder="Kodu Girin (Örn: P0300)" style="text-transform: uppercase;">
+                            <button class="btn btn-dark fw-bold px-4" onclick="sorgulaOBD()">SORGULA</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="obdSonuc" class="mt-4 d-none">
+                    <div class="bg-white text-dark p-3 rounded shadow-sm mx-auto" style="max-width: 600px;">
+                        <h5 class="fw-bold text-danger mb-1" id="obdBaslik"></h5>
+                        <p class="mb-2" id="obdAciklama"></p>
+                        <a href="#" id="obdLink" class="btn btn-sm btn-outline-danger fw-bold w-100">İlgili Ustaları Gör</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold text-dark m-0">
+                <i class="fa-solid fa-store me-2 text-warning"></i> 
+                {% if arama_terimi %} "{{ arama_terimi }}" Arama Sonuçları {% elif secilen_kategori and secilen_kategori != 'TUMU' %} {{ secilen_kategori }} İşletmeleri {% else %} Tüm İşletmeler {% endif %}
+            </h5>
+            <span class="badge bg-dark">{{ dukkanlar.count }} İşletme Bulundu</span>
+        </div>
+        
+        <div class="row">
+            {% for dukkan in dukkanlar %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 {% if dukkan.vitrin_uye %}card-premium{% else %}card-standard{% endif %} overflow-hidden">
+                    {% if dukkan.vitrin_uye %}<div class="premium-badge"><i class="fa-solid fa-crown me-1"></i> VİTRİN ÜYE</div>{% endif %}
+                    <div class="row g-0 h-100">
+                        <div class="col-4 position-relative">
+                            <a href="{% url 'dukkan_detay' dukkan.id %}" class="shop-link">
+                                {% if dukkan.foto %}
+                                <img src="{{ dukkan.foto.url }}" class="img-fluid h-100 w-100" style="object-fit: cover;" alt="{{ dukkan.isim }}">
+                                {% else %}
+                                <div class="bg-light d-flex align-items-center justify-content-center h-100 text-muted"><i class="fa-solid fa-image fa-2x opacity-25"></i></div>
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="col-8">
+                            <div class="card-body h-100 d-flex flex-column justify-content-between">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-start"><span class="category-label text-uppercase">{{ dukkan.get_kategori_display }}</span></div>
+                                    <a href="{% url 'dukkan_detay' dukkan.id %}" class="text-decoration-none text-dark">
+                                        <h5 class="card-title fw-bold mt-1 mb-1 pe-5">{{ dukkan.isim }} {% if dukkan.onayli_esnaf %}<i class="fa-solid fa-circle-check verified-icon" title="Onaylı"></i>{% endif %}</h5>
+                                    </a>
+                                    
+                                    <div class="d-flex align-items-center mb-2">
+                                        {% if dukkan.ortalama_puan > 0 %}
+                                            <span class="rating-badge"><i class="fa-solid fa-star small"></i> {{ dukkan.ortalama_puan }}</span>
+                                            <span class="review-count">{{ dukkan.yorum_sayisi }} Değerlendirme</span>
+                                        {% else %}
+                                            <span class="text-muted small fst-italic">Henüz değerlendirilmedi</span>
+                                        {% endif %}
+                                    </div>
+
+                                    <p class="text-muted small mb-2 text-truncate">{{ dukkan.uzmanlik }}</p>
+                                    <p class="text-secondary small mb-0"><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ dukkan.adres }}</p>
+                                </div>
+                                <div class="d-flex gap-2 mt-3" style="position: relative; z-index: 2;">
+                                    <a href="tel:{{ dukkan.telefon }}" class="btn btn-success btn-sm flex-grow-1 fw-bold shadow-sm"><i class="fa-solid fa-phone me-1"></i> Hemen Ara</a>
+                                    {% if dukkan.konum_linki %}<a href="{{ dukkan.konum_linki }}" target="_blank" class="btn btn-outline-primary btn-sm flex-grow-1 fw-bold shadow-sm"><i class="fa-solid fa-diamond-turn-right me-1"></i> Yol Tarifi</a>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5"><h4 class="text-muted">Kayıt bulunamadı.</h4></div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white pt-5 pb-3 mt-5">
+        <div class="container text-center small text-white-50">&copy; 2025 Ustam Cepte.</div>
+    </footer>
+
+    <button type="button" class="btn btn-warning rounded-circle shadow-lg d-flex align-items-center justify-content-center" style="position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; z-index: 9999; border: 4px solid white;" data-bs-toggle="modal" data-bs-target="#asistanModal"><i class="fa-solid fa-robot fa-2x text-dark"></i></button>
+    <div class="modal fade" id="asistanModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow-lg" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white;"><div class="modal-header border-0"><h5 class="modal-title fw-bold"><i class="fa-solid fa-robot text-warning me-2"></i> Ustam Asistan</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body text-center py-4"><h4 class="mb-3">Sorun Nedir?</h4><div class="d-grid gap-2"><button onclick="yonlendir('MOTOR')" class="btn btn-outline-light text-start p-3 hover-warning"><i class="fa-solid fa-car-burst me-2 text-warning"></i> Motor Sorunu</button><button onclick="yonlendir('ELEKTRIK')" class="btn btn-outline-light text-start p-3 hover-warning"><i class="fa-solid fa-bolt me-2 text-warning"></i> Elektrik / Akü</button><button onclick="yonlendir('KAPORTA')" class="btn btn-outline-light text-start p-3 hover-warning"><i class="fa-solid fa-spray-can-sparkles me-2 text-warning"></i> Kaporta / Boya</button><button onclick="yonlendir('YOLYARDIM')" class="btn btn-outline-light text-start p-3 hover-warning"><i class="fa-solid fa-truck-pickup me-2 text-warning"></i> Yolda Kaldım</button></div></div></div></div></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+        function yonlendir(kategori) {
+            var modal = bootstrap.Modal.getInstance(document.getElementById('asistanModal'));
+            modal.hide(); setTimeout(function() { window.location.href = "?kategori=" + kategori; }, 300);
+        }
+
+        function analyze(type) {
+            document.getElementById('step1').classList.add('d-none');
+            document.getElementById('step2').classList.remove('d-none');
+            setTimeout(() => {
+                document.getElementById('step2').classList.add('d-none');
+                document.getElementById('step3').classList.remove('d-none');
+                let text = "", link = "";
+                if (type === 'SES') { text = "%89 Motor Arızası"; link = "?kategori=MOTOR"; }
+                if (type === 'TITREME') { text = "%92 Rot Balans Hatası"; link = "?kategori=LASTIK"; }
+                if (type === 'DUMAN') { text = "%95 Yağ Yakma Problemi"; link = "?kategori=MOTOR"; }
+                if (type === 'ISIK') { text = "%90 Elektrik/Beyin Arızası"; link = "?kategori=ELEKTRIK"; }
+                document.getElementById('resultText').innerHTML = text;
+                document.getElementById('resultLink').href = link;
+            }, 2500);
+        }
+
+        function resetAI() {
+            document.getElementById('step3').classList.add('d-none');
+            document.getElementById('step2').classList.add('d-none');
+            document.getElementById('step1').classList.remove('d-none');
+        }
+
+        function bakimHesapla() {
+            let km = parseFloat(document.getElementById('aracKm').value);
+            let sonKm = parseFloat(document.getElementById('sonBakimKm').value);
+            let liste = document.getElementById('bakimListesi');
+            let sonucKutu = document.getElementById('bakimSonuc');
+            if (!km) { if(event.type === 'click') alert("Lütfen km girin."); return; } 
+            liste.innerHTML = ""; sonucKutu.classList.remove('d-none');
+            if (sonKm) {
+                let fark = km - sonKm;
+                if (fark >= 10000) { liste.innerHTML += "<li class='text-danger fw-bold'>⚠️ Bakım " + (fark - 10000) + " KM Gecikmiş!</li>"; }
+                else { liste.innerHTML += "<li class='text-success fw-bold'>✅ Bakıma " + (10000 - fark) + " KM var.</li>"; }
+            } else {
+                if (km % 10000 === 0) { liste.innerHTML += "<li class='text-danger'>Bakım zamanı gelmiş olabilir.</li>"; }
+            }
+        }
+
+        function sorgulaOBD() {
+            let kod = document.getElementById('obdInput').value.toUpperCase().trim();
+            let kutu = document.getElementById('obdSonuc');
+            let baslik = document.getElementById('obdBaslik');
+            let aciklama = document.getElementById('obdAciklama');
+            let link = document.getElementById('obdLink');
+            const arizalar = { "P0300": { t: "Ateşleme Hatası", d: "Buji arızası.", c: "MOTOR" }, "P0420": { t: "Katalizör", d: "Egzoz tıkalı.", c: "EGZOZ" } };
+            if (arizalar[kod]) {
+                kutu.classList.remove('d-none');
+                baslik.innerText = kod + ": " + arizalar[kod].t;
+                aciklama.innerText = arizalar[kod].d;
+                link.href = "?kategori=" + arizalar[kod].c;
+            } else { alert("Kod bulunamadı."); }
+        }
+
+        function startDictation() {
+            if (window.hasOwnProperty('webkitSpeechRecognition')) {
+                var recognition = new webkitSpeechRecognition();
+                recognition.lang = "tr-TR";
+                recognition.start();
+                recognition.onresult = function(e) {
+                    document.getElementById('searchInput').value = e.results[0][0].transcript;
+                    document.getElementById('searchForm').submit();
+                };
+            } else { alert("Sesli arama desteklenmiyor."); }
+        }
+    </script>
+
+</body>
+</html>

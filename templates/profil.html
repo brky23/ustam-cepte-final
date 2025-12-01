@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garajım - Ustam Cepte</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
+        .garage-card {
+            background: white; border-radius: 20px; padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .car-icon { font-size: 4rem; color: #f59e0b; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark bg-dark py-3 mb-5">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-warning" href="{% url 'home' %}"><i class="fa-solid fa-arrow-left"></i> Anasayfaya Dön</a>
+            <span class="text-white">{{ user.username|title }}</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                
+                <div class="garage-card text-center">
+                    <i class="fa-solid fa-car-side car-icon"></i>
+                    <h2 class="fw-bold mb-2">Dijital Garajım</h2>
+                    <p class="text-muted mb-4">Aracınızın bilgilerini kaydedin, size özel bakım hatırlatmaları yapalım.</p>
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-success">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="POST" class="text-start">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="fw-bold small text-muted">Marka & Model</label>
+                                {{ form.marka_model }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold small text-muted">Model Yılı</label>
+                                {{ form.yil }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold small text-muted">Güncel KM</label>
+                                {{ form.km }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold small text-muted">Son Bakım KM</label>
+                                {{ form.son_bakim_km }}
+                            </div>
+                            <div class="col-12">
+                                <label class="fw-bold small text-muted">Yakıt Tipi</label>
+                                {{ form.yakit }}
+                            </div>
+                            
+                            <div class="col-12 mt-4">
+                                <button class="btn btn-dark w-100 py-3 fw-bold rounded-pill shadow">
+                                    <i class="fa-solid fa-save me-2"></i> BİLGİLERİ KAYDET / GÜNCELLE
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="mt-5 text-start">
+                    <h4 class="fw-bold mb-3 border-bottom pb-2"><i class="fa-solid fa-heart text-danger"></i> Favori Ustalarım</h4>
+                    
+                    <div class="list-group shadow-sm">
+                        {% for fav in favoriler %}
+                        <a href="{% url 'dukkan_detay' fav.dukkan.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3">
+                            <div>
+                                <h6 class="mb-1 fw-bold">{{ fav.dukkan.isim }}</h6>
+                                <small class="text-muted">{{ fav.dukkan.get_kategori_display }}</small>
+                            </div>
+                            <span class="badge bg-warning text-dark rounded-pill">Git <i class="fa-solid fa-chevron-right"></i></span>
+                        </a>
+                        {% empty %}
+                        <p class="text-muted text-center p-3">Henüz favori eklemediniz.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

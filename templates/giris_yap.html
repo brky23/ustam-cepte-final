@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - Ustam Cepte</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .login-card {
+            background: white; border-radius: 20px; padding: 40px; width: 100%; max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; overflow: hidden;
+        }
+        .login-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+        input { 
+            width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; 
+            border-radius: 10px; background-color: #f8fafc; outline: none;
+        }
+        input:focus { border-color: #f59e0b; background-color: #fff; }
+        label { font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 5px; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="container px-4">
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center shadow-sm mb-4" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="login-card">
+            <div class="text-center mb-4">
+                <i class="fa-solid fa-user-lock fa-3x text-warning mb-2"></i>
+                <h3 class="fw-bold text-dark">Tekrar Hoşgeldin!</h3>
+                <p class="text-muted small">Devam etmek için giriş yap.</p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                
+                <button type="submit" class="btn btn-dark w-100 py-3 fw-bold rounded-pill shadow-sm mt-2">
+                    GİRİŞ YAP
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <a href="{% url 'password_reset' %}" class="small text-muted text-decoration-none">
+                    <i class="fa-solid fa-key"></i> Şifremi Unuttum
+                </a>
+            </div>
+            <div class="text-center mt-4 pt-3 border-top">
+                <p class="small text-muted">Hesabın yok mu? <a href="{% url 'kayit_ol' %}" class="text-warning fw-bold text-decoration-none">Hemen Kayıt Ol</a></p>
+                <a href="{% url 'home' %}" class="text-decoration-none small text-secondary"><i class="fa-solid fa-arrow-left"></i> Anasayfaya Dön</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
