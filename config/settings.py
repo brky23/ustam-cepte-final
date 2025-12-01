@@ -1,40 +1,32 @@
 import os
-import dj_database_url # Render'ın veritabanı ayarlarını otomatikleştirmek için
+import dj_database_url
 from pathlib import Path
 
 # Proje ana dizini
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Güvenlik Anahtarı (Canlı ortamda güvenlik için dışarıdan çekilir)
-# Şimdilik sabit kalsın, Render'da bunu değiştireceğiz.
-SECRET_KEY = 'django-insecure-ustam-cepte-key-RENDER-READY'
+# GÜVENLİK VE HATA AYARLARI
+# Render'da environment variable olarak tanımladığımız değerleri çekiyoruz
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-key-for-dev')
+DEBUG = os.environ.get('RENDER_DEBUG', 'False') == 'True'
 
-# Hata Modu (Canlıda KAPALI OLMALI)
-DEBUG = os.environ.get('RENDER_DEBUG') == 'True' # Render'a göre True/False olsun
+# HOST İZİNLERİ
+ALLOWED_HOSTS = ['*'] # Geçici olarak herkese izin veriyoruz (Hata almamak için)
 
-# Host İzinleri (DİKKAT: Türkçe karakterli domain için özel ayar)
-# Tüm adreslere izin ver (Yıldız işareti)
-ALLOWED_HOSTS = ['*']
-
-
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-
-# Uygulamalar
+# UYGULAMALAR
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', # Whitenoise için gerekli
     'rehber', 
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Statik dosyalar için eklendi
+    'whitenoise.middleware.WhiteNoiseMiddleware', # <--- EN ÜSTTE OLMALI (Static dosyalar için)
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -63,7 +55,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Veritabanı Ayarları (RENDER OTOMATİK VERİTABANI İÇİN)
+# VERİTABANI (Render PostgreSQL Otomatik Bağlantı)
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'),
@@ -71,23 +63,28 @@ DATABASES = {
     )
 }
 
-
-# Dil ve Saat Ayarları
+# DİL VE SAAT
 LANGUAGE_CODE = 'tr'
 TIME_ZONE = 'Europe/Istanbul'
 USE_I18N = True
 USE_TZ = True
 
-# Statik ve Medya Dosyaları (Whitenoise için)
+# --- STATİK VE MEDYA DOSYALARI (EN ÖNEMLİ KISIM) ---
+
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # Statik dosyaların toplanacağı yer
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# DJANGO 5.x ve ÜZERİ İÇİN YENİ DEPOLAMA AYARI (HATAYI ÇÖZEN KISIM)
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
