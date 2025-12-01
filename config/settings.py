@@ -13,14 +13,9 @@ SECRET_KEY = 'django-insecure-ustam-cepte-key-RENDER-READY'
 DEBUG = os.environ.get('RENDER_DEBUG') == 'True' # Render'a göre True/False olsun
 
 # Host İzinleri (DİKKAT: Türkçe karakterli domain için özel ayar)
-ALLOWED_HOSTS = [
-    'ustavarmı.com',           # Türkçe hali
-    'www.ustavarmı.com',       # Türkçe www'li hali
-    'xn--ustavarm-0kb.com',    # Teknik (Punycode) hali - ASIL ÖNEMLİ OLAN BU
-    'www.xn--ustavarm-0kb.com',# Teknik www'li hali
-    'localhost', 
-    '127.0.0.1'
-]
+# Tüm adreslere izin ver (Yıldız işareti)
+ALLOWED_HOSTS = ['*']
+
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
