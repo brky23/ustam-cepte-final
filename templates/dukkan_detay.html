@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ dukkan.isim }} - Ustam Cepte</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; padding-bottom: 100px; }
+        /* GENEL SAYFA YAPISI */
+        body { 
+            background-color: #f8f9fa; 
+            font-family: 'Segoe UI', sans-serif; 
+            padding-bottom: 100px; /* Alttaki siyah bant için boşluk */
+        }
         
-        /* --- KAPAK FOTOĞRAFI AYARLARI --- */
+        /* --- KAPAK FOTOĞRAFI ALANI --- */
         .cover-photo {
-            /* Masaüstü Yüksekliği */
-            height: 320px; 
+            min-height: 340px; /* Sabit değil, esnek yükseklik */
+            height: auto;
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             position: relative; 
             display: flex; 
@@ -22,80 +28,143 @@
             color: white; 
             text-align: center; 
             overflow: hidden;
+            padding-top: 80px;    /* Üst butonlar için boşluk */
+            padding-bottom: 40px; /* Alt yazılar için boşluk */
         }
         
         .cover-photo::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            content: ''; 
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 100%;
             background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 30px 30px; pointer-events: none;
+            background-size: 30px 30px; 
+            pointer-events: none;
         }
 
-        /* --- MOBİL İÇİN ÖZEL AYARLAR (SIKIŞIKLIĞI ÇÖZEN KISIM) --- */
-        @media (max-width: 768px) {
-            .cover-photo {
-                height: auto; /* Yüksekliği serbest bırak */
-                min-height: 340px; /* En az bu kadar olsun */
-                padding-top: 80px; /* Üstteki butonlar için boşluk */
-                padding-bottom: 40px;
-                align-items: flex-start; /* Yazıları biraz yukarı al */
-            }
-            
-            /* Başlığı mobilde küçült */
-            .cover-photo h1 { font-size: 1.8rem !important; line-height: 1.2; }
-            
-            /* Butonları kenara it ve küçült */
-            .header-btn-left { top: 15px !important; left: 15px !important; font-size: 0.8rem !important; padding: 5px 10px !important; }
-            .header-btn-right { top: 15px !important; right: 15px !important; width: 40px !important; height: 40px !important; }
-            
-            /* Rozetleri küçült */
-            .badge { font-size: 0.7rem !important; padding: 5px 10px !important; }
-        }
-
-        /* PROFİL KARTI */
+        /* --- PROFİL KARTI (BEYAZ KUTU) --- */
         .profile-card {
-            margin-top: -50px; /* Kartı kapağın içine sokma miktarı */
-            background: white; border-radius: 20px;
+            margin-top: -60px; 
+            background: white; 
+            border-radius: 20px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.1); 
-            overflow: hidden; position: relative; z-index: 10;
+            overflow: hidden;
+            position: relative; 
+            z-index: 10;
             border: 1px solid rgba(0,0,0,0.05);
         }
 
-        .badge-verified { color: #3b82f6; font-size: 1.3rem; margin-left: 5px; vertical-align: middle; }
+        /* MAVİ TİK ROZETİ */
+        .badge-verified { 
+            color: #3b82f6; 
+            font-size: 1.3rem; 
+            margin-left: 5px; 
+            vertical-align: middle;
+        }
         
-        /* DİĞER STİLLER */
-        .status-badge { font-size: 0.9rem; font-weight: bold; padding: 10px 15px; border-radius: 30px; display: block; width: 100%; text-align: center; margin-bottom: 15px; }
+        /* AÇIK/KAPALI ROZETLERİ */
+        .status-badge { 
+            font-size: 0.9rem; 
+            font-weight: bold; 
+            padding: 10px 15px; 
+            border-radius: 30px; 
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 15px;
+        }
         .bg-open { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
         .bg-closed { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
         .bg-247 { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
 
-        .btn-action { border-radius: 12px; padding: 12px; font-weight: bold; transition: 0.2s; }
-        .btn-action:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        /* BUTONLAR */
+        .btn-action { 
+            border-radius: 12px; 
+            padding: 12px; 
+            font-weight: bold; 
+            transition: 0.2s; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .btn-action:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
 
-        .feature-box { background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 15px 10px; text-align: center; font-size: 0.85rem; color: #495057; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.2s; }
+        /* ÖZELLİK KUTUCUKLARI (KREDİ KARTI VS) */
+        .feature-box {
+            background-color: #f8f9fa; 
+            border: 1px solid #e9ecef; 
+            border-radius: 12px;
+            padding: 15px 10px; 
+            text-align: center; 
+            font-size: 0.85rem; 
+            color: #495057; 
+            height: 100%;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            transition: 0.2s;
+        }
         .feature-box:hover { background-color: #fff; border-color: #dee2e6; transform: translateY(-2px); }
         .feature-icon { font-size: 1.5rem; margin-bottom: 8px; color: #0f172a; }
 
-        .comment-card { background: #fff; border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
-        .user-avatar-modern { width: 50px; height: 50px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        /* YORUM KARTLARI (MODERN TASARIM) */
+        .comment-card {
+            background: #fff; 
+            border-radius: 15px; 
+            padding: 25px; 
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03); 
+            border: 1px solid #f0f0f0;
+            transition: transform 0.2s ease-in-out;
+        }
+        .comment-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        
+        .user-avatar-modern {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #FFD700;
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; font-weight: bold; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
         .comment-text { color: #333; font-size: 1rem; line-height: 1.6; margin-top: 5px; }
         .comment-date { color: #9ca3af; font-size: 0.85rem; font-weight: 500; }
 
-        .btn-fav { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; background: white; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; }
+        /* FAVORİ BUTONU STİLİ */
+        .btn-fav {
+            width: 50px; height: 50px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s; background: white; border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
         .btn-fav:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
 
-        /* KAMPANYA BANDI */
+        /* KAMPANYA BANDI ANİMASYONU */
         @keyframes pulse-red { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
         .campaign-box {
             background: linear-gradient(45deg, #ef4444, #b91c1c);
             color: white; border-radius: 12px; padding: 20px;
             margin-bottom: 30px; animation: pulse-red 2s infinite;
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); border: 2px solid #fca5a5;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+            border: 2px solid #fca5a5;
         }
 
-        /* BİLDİRİM BANDI ANİMASYONU */
+        /* ALT BİLDİRİM BANDI ANİMASYONU */
         @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes pulse-strong { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); } 50% { transform: scale(1.08); box-shadow: 0 0 10px 5px rgba(245, 158, 11, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
+        @keyframes pulse-strong {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            50% { transform: scale(1.08); box-shadow: 0 0 10px 5px rgba(245, 158, 11, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
         .pulse-badge { animation: pulse-strong 2s infinite !important; display: inline-block; }
+
+        /* MOBİL UYUMLULUK AYARLARI */
+        @media (max-width: 768px) {
+            .display-4 { font-size: 2rem; }
+            .header-btn-left { top: 15px !important; left: 15px !important; font-size: 0.8rem !important; padding: 5px 10px !important; }
+            .header-btn-right { top: 15px !important; right: 15px !important; width: 40px !important; height: 40px !important; }
+            .cover-photo { padding-top: 80px; } /* Mobilde butonlar üstte kalmasın */
+        }
     </style>
 </head>
 <body>
@@ -116,7 +185,7 @@
         <div style="z-index: 10; max-width: 800px; padding: 0 20px; margin-top: 20px;">
             
             <div class="mb-3">
-                <span class="badge bg-light text-dark border border-secondary me-1 px-3 py-2 rounded-pill shadow-sm">{{ dukkan.get_hizmet_sinifi_display }}</span>
+                <span class="badge bg-light text-dark border border-secondary me-2 px-3 py-2 rounded-pill shadow-sm">{{ dukkan.get_hizmet_sinifi_display }}</span>
                 <span class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm">{{ dukkan.get_kategori_display }}</span>
             </div>
             
@@ -171,7 +240,7 @@
                                 {% endif %}
                             </div>
 
-                            <a href="https://wa.me/905453972069?text=Merhaba, {{ dukkan.isim }} işletmesinin sahibiyim. Bilgilerimi güncellemek ve vitrine çıkmak istiyorum." 
+                            <a href="https://wa.me/905453972069?text=Merhaba, {{ dukkan.isim }} işletmesinin sahibiyim. Bilgilerimi güncellemek istiyorum." 
                                target="_blank" 
                                class="btn btn-outline-dark w-100 py-3 fw-bold border-2 shadow-sm d-flex align-items-center justify-content-center"
                                style="font-size: 0.9rem; border-radius: 12px;">
@@ -257,7 +326,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="row mt-4 mb-5">
                     <div class="col-md-6 mb-3">
                         <div class="card border-0 shadow-sm p-4 h-100">
@@ -274,10 +342,11 @@
                             </ul>
                         </div>
                     </div>
+                    
                     <div class="col-md-6 mb-3">
                         <div class="card border-0 shadow-sm p-4 h-100 bg-dark text-white">
-                            <h5 class="fw-bold text-warning"><i class="fa-solid fa-calendar-check me-2"></i> Hızlı Randevu</h5>
-                            <p class="small text-white-50">Müsaitlik durumu için mesaj gönderin.</p>
+                            <h5 class="fw-bold text-warning mb-3"><i class="fa-solid fa-calendar-check me-2"></i> Hızlı Randevu</h5>
+                            <p class="small text-white-50 mb-3">Bilgilerinizi girin, ustaya direkt WhatsApp'tan mesaj gönderin.</p>
                             
                             <form onsubmit="randevuWhatsapp(event)">
                                 <input type="text" id="randevuAd" class="form-control mb-2 form-control-sm" placeholder="Adınız Soyadınız" required>
@@ -354,6 +423,7 @@
                         {% endfor %}
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -362,8 +432,12 @@
         <div class="card border-0 shadow-lg bg-dark text-white overflow-hidden" 
              style="border-left: 5px solid #f59e0b !important; animation: slideUp 1s ease-out;">
             <div class="card-body p-3 d-flex align-items-center justify-content-between">
+                
                 <div class="d-flex align-items-center">
-                    <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;"><i class="fa-solid fa-chart-line fa-lg"></i></div>
+                    <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3" 
+                         style="width: 40px; height: 40px; min-width: 40px;">
+                        <i class="fa-solid fa-chart-line fa-lg"></i>
+                    </div>
                     <div style="line-height: 1.2;">
                         <div class="fw-bold text-warning" style="font-size: 0.7rem; letter-spacing: 1px;">İŞLETME SAHİBİ MİSİN?</div>
                         <div class="small">
@@ -375,6 +449,7 @@
                         </div>
                     </div>
                 </div>
+
                 <a href="https://wa.me/905453972069?text=Merhaba, {{ dukkan.isim }} işletmemi Vitrin Üye yapmak ve öne çıkarmak istiyorum." 
                    class="btn btn-sm btn-light fw-bold ms-3 shadow-sm" 
                    style="white-space: nowrap; font-size: 0.85rem;">
@@ -390,12 +465,31 @@
             let ad = document.getElementById('randevuAd').value;
             let tel = document.getElementById('randevuTel').value;
             let dukkanTel = document.getElementById('dukkanTel').value;
+            
+            // Telefon numarasını temizle (Boşlukları ve + işaretini kaldır)
             dukkanTel = dukkanTel.replace(/\s/g, '').replace('+', '').replace('-', '');
-            if (!dukkanTel.startsWith('90')) { dukkanTel = '90' + dukkanTel.replace(/^0+/, ''); }
+            
+            // Başında 90 yoksa ekle
+            if (!dukkanTel.startsWith('90')) { 
+                dukkanTel = '90' + dukkanTel.replace(/^0+/, ''); // Başındaki 0'ı silip 90 ekle
+            }
+
             let mesaj = `Merhaba Usta, ben *${ad}*. Numaram: *${tel}*. Müsaitlik durumunuzu ve randevu almak için iletişime geçtim.`;
+            
+            // WhatsApp'ı yeni sekmede aç
             window.open(`https://wa.me/${dukkanTel}?text=${encodeURIComponent(mesaj)}`, '_blank');
         }
     </script>
+    
+    <style>
+        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes pulse-strong {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 10px 5px rgba(245, 158, 11, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+        .pulse-badge { animation: pulse-strong 2s infinite !important; display: inline-block; }
+    </style>
 
     <footer class="text-center py-4 text-muted small mt-5">
         &copy; 2025 Ustam Cepte. Güvenilir Sanayi Rehberi.
