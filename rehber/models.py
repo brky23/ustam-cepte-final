@@ -110,3 +110,64 @@ class Favori(models.Model):
 
     def __str__(self):
         return f"{self.kullanici.username} -> {self.dukkan.isim}"
+   
+
+   # 5. ARIZA TESPİT MODELİ
+class ArizaTespitKaydi(models.Model):
+    YAKIT_TIPLERI = (
+        ('dizel', 'Dizel'),
+        ('benzin', 'Benzin/LPG'),
+        ('elektrik', 'Elektrik'),
+    )
+
+    kullanici = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='ariza_kayitlari'
+    )
+
+    tarih = models.DateTimeField(auto_now_add=True)
+
+    marka_model = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="Marka & Model"
+    )
+
+    yil = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name="Model Yılı"
+    )
+
+    km = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name="Kilometre"
+    )
+
+    yakit_tipi = models.CharField(
+        max_length=20,
+        choices=YAKIT_TIPLERI,
+        blank=True,
+        verbose_name="Yakıt Tipi"
+    )
+
+    # Kullanıcının yazdığı şikayet metni
+    sikayet_metin = models.TextField(verbose_name="Şikayet / Açıklama")
+
+    # Checkbox'lardan gelen belirtiler
+    belirtiler = models.JSONField(default=list, blank=True)
+
+    # AI analiz sonucu JSON
+    sonuc = models.JSONField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-tarih']
+
+    def __str__(self):
+        return f"{self.marka_model} - {self.km} km - {self.tarih:%Y-%m-%d}"
+
+    

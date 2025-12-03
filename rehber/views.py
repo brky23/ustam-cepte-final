@@ -203,3 +203,61 @@ def favori_islem(request, id):
         favori.delete() # Varsa sil (Tıklayınca çıkar)
     
     return redirect('dukkan_detay', id=id)
+# --- AI ARIZA TESPİT API ---
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+def ai_ariza_tespit(request):
+    if request.method != "POST":
+        return JsonResponse({"hata": "POST isteği gönderilmeli"}, status=400)
+
+    try:
+        data = json.loads(request.body)
+    except:
+        return JsonResponse({"hata": "JSON formatı hatalı"}, status=400)
+
+    sikayet = data.get("sikayet", "")
+    belirtiler = data.get("belirtiler", [])
+    marka_model = data.get("marka_model", "")
+    km = data.get("km", None)
+    yakit = data.get("yakit", "")
+
+    # Basit kural tabanlı yapay zeka
+    olasi_arizalar = []
+
+    if "titreme" in sikayet.lower():
+        olasi_arizalar.append({
+            "ariza": "Motor Ateşleme Problemi",
+            "aciklama": "Bobin, buji veya enjektör kaynaklı olabilir.",
+            "oneri": "Ateşleme sistemi kontrol edilmeli."
+        })
+
+    if "hararet" in sikayet.lower() or "ısı" in sikayet.lower():
+        olasi_arizalar.append({
+            "ariza": "Soğutma Sistemi Problemi",
+            "aciklama": "Radyatör, termostat veya devirdaim pompası olabilir.",
+            "oneri": "Soğutma sıvısı ve sensörler kontrol edilmeli."
+        })
+
+    if "çalışmıyor" in sikayet.lower() or "marş" in sikayet.lower():
+        olasi_arizalar.append({
+            "ariza": "Marş - Akü Problemi",
+            "aciklama": "Zayıf akü, marş motoru veya şarj dinamosu.",
+            "oneri": "Akü ve marş sistemi voltaj testi yapılmalı."
+        })
+
+    # Eğer hiç eşleşme yoksa genel bir öneri
+    if not olasi_arizalar:
+        olasi_arizalar.append({
+            "ariza": "Genel Kontrol Önerisi",
+            "aciklama": "Belirtiler net değil, detaylı kontrol gerekli.",
+            "oneri": "Güvenilir bir serviste teşhis yapılmalı."
+        })
+
+    return JsonResponse({
+        "durum": "başarılı",
+        "tahmin_sayisi": len(olasi_arizalar),
+        "tahminler": olasi_arizalar,
+    })

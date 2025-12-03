@@ -3,6 +3,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from rehber.views import ai_ariza_tespit
 
 # DİKKAT: En sona 'favori_islem' eklendi
 from rehber.views import home, dukkan_detay, kayit_ol, giris_yap, cikis_yap, esnaf_kayit, profil, favori_islem
@@ -11,7 +12,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('dukkan/<int:id>/', dukkan_detay, name='dukkan_detay'),
-    
+    path("api/ai/ariza-tespit/", ai_ariza_tespit, name="ai_ariza_tespit"),
+
     # Üyelik
     path('kayit/', kayit_ol, name='kayit_ol'),
     path('giris/', giris_yap, name='giris_yap'),
