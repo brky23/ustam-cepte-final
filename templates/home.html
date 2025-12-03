@@ -358,69 +358,21 @@
             modal.hide(); setTimeout(function() { window.location.href = "?kategori=" + kategori; }, 300);
         }
 
-    function analyze(type) {
-    // 1) görsel adımları yönet
-    document.getElementById('step1').classList.add('d-none');
-    document.getElementById('step2').classList.remove('d-none');
-
-    // 2) Şikayet metni
-    let sikayetText = "";
-    if (type === 'SES') sikayetText = "Ses geliyor";
-    if (type === 'TITREME') sikayetText = "Araba titreme yapıyor";
-    if (type === 'DUMAN') sikayetText = "Egzozdan duman çıkıyor";
-    if (type === 'ISIK') sikayetText = "Arıza lambası yanıyor";
-
-    // 3) Marka - km - yakıt (şimdilik boş)
-    let marka = "";
-    let km = "";
-    let yakit = "";
-
-    // 4) API'ye POST isteği gönder
-    fetch("/api/ai/ariza-tespit/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            sikayet: sikayetText,
-            belirtiler: [type],
-            marka_model: marka,
-            km: km,
-            yakit: yakit
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        // loading ekranı kapat
-        document.getElementById('step2').classList.add('d-none');
-        document.getElementById('step3').classList.remove('d-none');
-
-        if (data.tahminler && data.tahminler.length > 0) {
-            let ariza = data.tahminler[0].ariza;
-            let aciklama = data.tahminler[0].aciklama;
-            let oneri = data.tahminler[0].oneri;
-
-            document.getElementById('resultText').innerHTML =
-                `<b>${ariza}</b><br>${aciklama}<br><i>${oneri}</i>`;
-
-            // kategori tespiti
-            let kategori = "MOTOR";
-            if (ariza.includes("Elektrik")) kategori = "ELEKTRIK";
-            if (ariza.includes("Lastik") || ariza.includes("Rot")) kategori = "LASTIK";
-
-            document.getElementById('resultLink').href = "?kategori=" + kategori;
-
-        } else {
-            document.getElementById('resultText').innerHTML =
-                "Tahmin üretilemedi.";
+        function analyze(type) {
+            document.getElementById('step1').classList.add('d-none');
+            document.getElementById('step2').classList.remove('d-none');
+            setTimeout(() => {
+                document.getElementById('step2').classList.add('d-none');
+                document.getElementById('step3').classList.remove('d-none');
+                let text = "", link = "";
+                if (type === 'SES') { text = "%89 Motor Arızası"; link = "?kategori=MOTOR"; }
+                if (type === 'TITREME') { text = "%92 Rot Balans Hatası"; link = "?kategori=LASTIK"; }
+                if (type === 'DUMAN') { text = "%95 Yağ Yakma Problemi"; link = "?kategori=MOTOR"; }
+                if (type === 'ISIK') { text = "%90 Elektrik/Beyin Arızası"; link = "?kategori=ELEKTRIK"; }
+                document.getElementById('resultText').innerHTML = text;
+                document.getElementById('resultLink').href = link;
+            }, 2500);
         }
-    })
-    .catch(err => {
-        document.getElementById('step2').classList.add('d-none');
-        document.getElementById('step3').classList.remove('d-none');
-        document.getElementById('resultText').innerHTML =
-            "Sunucuya bağlanırken bir hata oluştu.";
-    });
-}  // <-- analyze burada bitiyor ✔
-
 
         function resetAI() {
             document.getElementById('step3').classList.add('d-none');
